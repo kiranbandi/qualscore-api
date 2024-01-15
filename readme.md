@@ -30,5 +30,5 @@ Q1 - Evidence - Does the rater provide sufficient evidence about resident perfor
 2: "moderate",
 3: "high"
 
-Q2i - Suggestion - Does the rater provide a suggestion for improvement? (0-no/1-yes)
-Q31 - Connection - Is the rater’s suggestion linked to the behavior described? (0-no/1-yes)
+Q2i - Suggestion - Does the rater provide a suggestion for improvement? 0-Yes
+Q31 - Connection - Is the rater’s suggestion linked to the behavior described? 0-Yes 

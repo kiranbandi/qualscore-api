@@ -1,9 +1,5 @@
 import transformers as tf
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-# create API instance
-app = FastAPI()
+import csv
 
 # Function to load and cache models
 def load_model(username, prefix, model_name):
@@ -53,14 +49,28 @@ for i, mn in enumerate(models_to_load):
     models[mn] = load_model(USERNAME, PREFIX, mn)
 print('Model Loading Complete')
 
-class InputModel(BaseModel):
-    comments: list[str]
+sample_file = csv.DictReader(open("sample.csv",encoding="ISO-8859-1"))
+
+with open('output.csv', 'w', newline='') as csvfile:
+    fieldnames = ['id', 'qual','q1','q2i','q3i']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+
+    counter = 0
     
-@app.post("/generate-qualscore")
-def predict_qualscore(payload: InputModel):
-    comments = payload.comments
-    # Run the models on the comment list
-    results = run_models(models_to_load, models, comments)
-    return [results]
+    for row in sample_file:
+        comment=row['Feedback'].replace("\n", " ")
+        # to prevent the ML model from failing for large comments, anything over than 1500 characters is capped at 1500
+        if len(comment) > 1500:
+            comment = comment[:1500]
+        results = run_models(models_to_load, models, [comment])
+        csv_entry = results[0]
+        csv_entry['id'] = row['ID']
+        writer.writerow(csv_entry)
+        counter+=1
+        # print count in multiples of 100 sets
+        if counter%100==0:
+            print(counter)
+        
 
 
