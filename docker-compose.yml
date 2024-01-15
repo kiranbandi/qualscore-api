@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  app:
+    platform: "linux/amd64"
+    container_name: qualscore
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - "8082:8082"
+    image: qualscore
+    restart: unless-stopped
